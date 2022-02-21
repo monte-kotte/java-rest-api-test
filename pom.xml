@@ -12,6 +12,7 @@
   <modules>
     <module>api</module>
     <module>service-audit</module>
+    <module>service-user</module>
   </modules>
 
   <properties>
