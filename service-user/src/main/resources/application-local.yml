@@ -1,0 +1,13 @@
+server:
+  port: 8080
+
+# https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+spring:
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      authentication-database: admin
+      username: root
+      password: root
+      database: localdb
