@@ -21,6 +21,7 @@
     <maven.compiler.target>11</maven.compiler.target>
     <mapstruct.version>1.4.2.Final</mapstruct.version>
     <commons-collections4.version>4.4</commons-collections4.version>
+    <testcontainers.version>1.16.3</testcontainers.version>
   </properties>
 
   <dependencies>
@@ -68,6 +69,19 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${testcontainers.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>mongodb</artifactId>
+      <version>${testcontainers.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
