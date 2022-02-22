@@ -1,4 +1,4 @@
-package monte.test.model;
+package monte.test.model.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TestDL {
+public class TestApiDL {
     private String number;
     private Boolean active;
 }

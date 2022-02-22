@@ -1,4 +1,4 @@
-package monte.test.model;
+package monte.test.model.db;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TestAddress {
-    String streetAddress;
-    String apartmentNumber;
-    String city;
-    String state;
-    String zip;
+public class TestDbDL {
+    private String number;
+    private Boolean active;
 }
