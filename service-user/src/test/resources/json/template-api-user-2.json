@@ -5,12 +5,12 @@
   "email": "nms@ani.com",
   "driverLicense": {
     "number": "1234d",
-    "active": true
+    "active": false
   },
   "addresses": [
     {
-      "streetAddress": "123 Main",
-      "apartmentNumber": "111",
+      "streetAddress": "6 North",
+      "apartmentNumber": "124214",
       "city": "Miami",
       "state": "Florida",
       "zip": "33333"

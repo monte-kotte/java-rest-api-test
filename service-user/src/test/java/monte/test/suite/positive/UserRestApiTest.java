@@ -3,11 +3,11 @@ package monte.test.suite.positive;
 import monte.test.AbstractTest;
 import monte.test.model.api.TestApiUser;
 import monte.test.model.db.TestDbUser;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
@@ -22,14 +22,13 @@ public class UserRestApiTest extends AbstractTest {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    public static final String CASE1_API_USER = "src/test/resources/json/case1-api-user.json";
-    public static final String CASE2_DB_USER = "src/test/resources/json/case2-db-user.json";
-    public static final String CASE2_API_USER = "src/test/resources/json/case2-api-user.json";
+    public static final String TEMPLATE_DB_USER_1 = "src/test/resources/json/template-db-user1.json";
+    public static final String TEMPLATE_API_USER_1 = "src/test/resources/json/template-api-user-1.json";
+    public static final String TEMPLATE_API_USER_2 = "src/test/resources/json/template-api-user-2.json";
 
     @Test
-    @DisplayName("CASE1 - create new user")
     void createUserTest() throws IOException {
-        var user = fromFile(CASE1_API_USER, TestApiUser.class);
+        var user = fromFile(TEMPLATE_API_USER_1, TestApiUser.class);
         var response = restTemplate.postForEntity("/users", user, TestApiUser.class);
 
         assertThat(response.getStatusCode()).as("Verify status code")
@@ -43,11 +42,10 @@ public class UserRestApiTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("CASE2 - get all users")
     void getAllUsers() throws IOException {
         // prep
-        var dbUser = mongoTemplate.save(fromFile(CASE2_DB_USER, TestDbUser.class));
-        var expectedApiUser = fromFile(CASE2_API_USER, TestApiUser.class);
+        var dbUser = mongoTemplate.save(fromFile(TEMPLATE_DB_USER_1, TestDbUser.class));
+        var expectedApiUser = fromFile(TEMPLATE_API_USER_1, TestApiUser.class);
         expectedApiUser.setId(dbUser.getId());
         var expectedDbSize = mongoTemplate.getCollection("user").countDocuments();
 
@@ -63,6 +61,44 @@ public class UserRestApiTest extends AbstractTest {
                 .contains(expectedApiUser);
         assertThat(response.getBody().size()).as("Verify db size")
                 .isEqualTo(expectedDbSize);
+    }
+
+    @Test
+    void getUserById() throws IOException {
+        var dbUser = mongoTemplate.save(fromFile(TEMPLATE_DB_USER_1, TestDbUser.class));
+        var dbUserId = dbUser.getId();
+        var expectedApiUser = fromFile(TEMPLATE_API_USER_1, TestApiUser.class);
+        expectedApiUser.setId(dbUserId);
+
+        var response = restTemplate.getForEntity("/users/" + dbUserId, TestApiUser.class);
+
+        assertThat(response.getStatusCode()).as("Verify status code")
+                .isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).as("Verify response")
+                .usingRecursiveComparison()
+                .ignoringAllOverriddenEquals()
+                .isEqualTo(expectedApiUser);
+    }
+
+    @Test
+    void updateUser() throws IOException {
+        var dbUser = mongoTemplate.save(fromFile(TEMPLATE_DB_USER_1, TestDbUser.class));
+        var dbUserId = dbUser.getId();
+        var apiUser = fromFile(TEMPLATE_API_USER_2, TestApiUser.class);
+
+        var userEntity = new HttpEntity<>(apiUser);
+        var response = restTemplate.exchange("/users/" + dbUserId,
+                HttpMethod.PUT, userEntity, TestApiUser.class);
+
+        assertThat(response.getStatusCode()).as("Verify status code")
+                .isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).as("Verify response")
+                .usingRecursiveComparison()
+                .ignoringAllOverriddenEquals()
+                .ignoringFields("id")
+                .isEqualTo(apiUser);
+        assertThat(response.getBody().getId()).as("Verify id")
+                .isEqualTo(dbUserId);
     }
 
     private <T> T fromFile(String fileName, Class<T> clazz) throws IOException {
