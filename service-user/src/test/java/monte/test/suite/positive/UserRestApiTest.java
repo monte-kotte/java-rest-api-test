@@ -11,7 +11,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -21,10 +20,6 @@ public class UserRestApiTest extends AbstractTest {
 
     @Autowired
     MongoTemplate mongoTemplate;
-
-    public static final String TEMPLATE_DB_USER_1 = "src/test/resources/json/template-db-user1.json";
-    public static final String TEMPLATE_API_USER_1 = "src/test/resources/json/template-api-user-1.json";
-    public static final String TEMPLATE_API_USER_2 = "src/test/resources/json/template-api-user-2.json";
 
     @Test
     void createUserTest() throws IOException {
@@ -99,10 +94,6 @@ public class UserRestApiTest extends AbstractTest {
                 .isEqualTo(apiUser);
         assertThat(response.getBody().getId()).as("Verify id")
                 .isEqualTo(dbUserId);
-    }
-
-    private <T> T fromFile(String fileName, Class<T> clazz) throws IOException {
-        return objectMapper.readValue(new File(fileName), clazz);
     }
 
 }

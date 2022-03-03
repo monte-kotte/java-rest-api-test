@@ -13,10 +13,17 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.io.File;
+import java.io.IOException;
+
 @ActiveProfiles("component-test")
 @SpringBootTest(classes = UserApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
 public abstract class AbstractTest {
+
+    public static final String TEMPLATE_DB_USER_1 = "src/test/resources/json/template-db-user1.json";
+    public static final String TEMPLATE_API_USER_1 = "src/test/resources/json/template-api-user-1.json";
+    public static final String TEMPLATE_API_USER_2 = "src/test/resources/json/template-api-user-2.json";
 
     @Container
     public static MongoDBContainer mongoDbContainer =
@@ -31,5 +38,9 @@ public abstract class AbstractTest {
     protected TestRestTemplate restTemplate;
     @Autowired
     protected ObjectMapper objectMapper;
+
+    protected <T> T fromFile(String fileName, Class<T> clazz) throws IOException {
+        return objectMapper.readValue(new File(fileName), clazz);
+    }
 
 }
