@@ -9,8 +9,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import java.io.File;
@@ -18,16 +16,19 @@ import java.io.IOException;
 
 @ActiveProfiles("component-test")
 @SpringBootTest(classes = UserApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Testcontainers
 public abstract class AbstractTest {
 
     public static final String TEMPLATE_DB_USER_1 = "src/test/resources/json/template-db-user1.json";
     public static final String TEMPLATE_API_USER_1 = "src/test/resources/json/template-api-user-1.json";
     public static final String TEMPLATE_API_USER_2 = "src/test/resources/json/template-api-user-2.json";
 
-    @Container
     public static MongoDBContainer mongoDbContainer =
             new MongoDBContainer(DockerImageName.parse("mongo"));
+
+    static {
+        // https://www.testcontainers.org/test_framework_integration/manual_lifecycle_control/
+        mongoDbContainer.start();
+    }
 
     @DynamicPropertySource
     static void dynamicProperty(DynamicPropertyRegistry registry) {
