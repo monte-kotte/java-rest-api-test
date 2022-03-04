@@ -29,6 +29,14 @@ public class ValidationTest extends AbstractTest {
                 arguments("secondName", "   ", "must not be blank"),
 
                 arguments("dateOfBirth", null, "must not be null"),
+                arguments("dateOfBirth", "", "must not be null"),
+                arguments("dateOfBirth", "   ", "must not be null"),
+                arguments("dateOfBirth", "January 17, 2000", "must be well-formed"),
+                arguments("dateOfBirth", "2000/1/17", "must be well-formed"),
+                arguments("dateOfBirth", "17-01-2000", "must be well-formed"),
+                arguments("dateOfBirth", "2000-12-32", "must be well-formed"),
+                arguments("dateOfBirth", "2000-13-01", "must be well-formed"),
+                arguments("dateOfBirth", "2222-01-17", "must be a past date"),
 
                 arguments("email", null, "must not be empty"),
                 arguments("email", "", "must not be empty"),
