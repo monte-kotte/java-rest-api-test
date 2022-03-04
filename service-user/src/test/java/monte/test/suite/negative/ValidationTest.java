@@ -50,6 +50,7 @@ public class ValidationTest extends AbstractTest {
 
                 arguments("addresses", null, "must not be empty"),
                 arguments("addresses", List.of(), "must not be empty"),
+
                 arguments("addresses[0].streetAddress", null, "must not be blank"),
                 arguments("addresses[0].streetAddress", "", "must not be blank"),
                 arguments("addresses[0].streetAddress", "  ", "must not be blank"),
@@ -59,9 +60,21 @@ public class ValidationTest extends AbstractTest {
                 arguments("addresses[0].state", null, "must not be blank"),
                 arguments("addresses[0].state", "", "must not be blank"),
                 arguments("addresses[0].state", "   ", "must not be blank"),
-                arguments("addresses[0].zip", null, "must not be blank"),
-                arguments("addresses[0].zip", "", "must not be blank"),
-                arguments("addresses[0].zip", "   ", "must not be blank")
+
+                arguments("addresses[0].zip", null, "must not be null"),
+                arguments("addresses[0].zip", "", "must match format 'xxxxx' or 'xxxxx-xxxx'"),
+                arguments("addresses[0].zip", "   ", "must match format 'xxxxx' or 'xxxxx-xxxx'"),
+                arguments("addresses[0].zip", "1", "must match format 'xxxxx' or 'xxxxx-xxxx'"),
+                arguments("addresses[0].zip", "1234", "must match format 'xxxxx' or 'xxxxx-xxxx'"),
+                arguments("addresses[0].zip", "123456", "must match format 'xxxxx' or 'xxxxx-xxxx'"),
+                arguments("addresses[0].zip", "a", "must match format 'xxxxx' or 'xxxxx-xxxx'"),
+                arguments("addresses[0].zip", "1234a", "must match format 'xxxxx' or 'xxxxx-xxxx'"),
+                arguments("addresses[0].zip", "a1234", "must match format 'xxxxx' or 'xxxxx-xxxx'"),
+                arguments("addresses[0].zip", "123456789", "must match format 'xxxxx' or 'xxxxx-xxxx'"),
+                arguments("addresses[0].zip", "12345-678", "must match format 'xxxxx' or 'xxxxx-xxxx'"),
+                arguments("addresses[0].zip", "1234a-5678", "must match format 'xxxxx' or 'xxxxx-xxxx'"),
+                arguments("addresses[0].zip", "12345-a678", "must match format 'xxxxx' or 'xxxxx-xxxx'"),
+                arguments("addresses[0].zip", "12345-6789a", "must match format 'xxxxx' or 'xxxxx-xxxx'")
         );
     }
 

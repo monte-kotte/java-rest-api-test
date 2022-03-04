@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Data
 @Builder
@@ -19,6 +21,7 @@ public class Address {
     String city;
     @NotBlank
     String state;
-    @NotBlank
+    @NotNull
+    @Pattern(regexp = "\\d{5}(\\-\\d{4})?", message = "must match format 'xxxxx' or 'xxxxx-xxxx'")
     String zip;
 }
