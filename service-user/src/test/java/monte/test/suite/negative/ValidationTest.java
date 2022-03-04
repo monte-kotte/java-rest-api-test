@@ -8,6 +8,8 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
@@ -89,6 +91,26 @@ public class ValidationTest extends AbstractTest {
                 .build();
 
         var response = restTemplate.postForEntity("/users", user, TestValidationErrorResponse.class);
+
+        assertThat(response.getStatusCode()).as("Verify status code")
+                .isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getViolations()).as("Verify response")
+                .containsExactlyInAnyOrder(expectedViolation);
+    }
+
+    @ParameterizedTest
+    @MethodSource("testDataProvider")
+    void updateUser_FieldValidationTest(String fieldName, Object fieldValue, String violationMessage) throws Exception {
+        var user = fromFile(TEMPLATE_API_USER_2, TestApiUser.class);
+        PropertyUtils.setNestedProperty(user, fieldName, fieldValue);
+        var expectedViolation = Violation.builder()
+                .fieldName(fieldName)
+                .message(violationMessage)
+                .build();
+
+        var userEntity = new HttpEntity<>(user);
+        var response = restTemplate.exchange("/users/1111",
+                HttpMethod.PUT, userEntity, TestValidationErrorResponse.class);
 
         assertThat(response.getStatusCode()).as("Verify status code")
                 .isEqualTo(HttpStatus.BAD_REQUEST);

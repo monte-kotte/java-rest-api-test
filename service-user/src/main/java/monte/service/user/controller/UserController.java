@@ -44,7 +44,7 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public User updateUser(@PathVariable(name = "id") String id, @RequestBody User user) {
+    public User updateUser(@PathVariable(name = "id") String id, @Valid @RequestBody User user) {
         user.setId(id); // use id from path
         return Optional.of(user)
             .map(mapper::mapToDb)
