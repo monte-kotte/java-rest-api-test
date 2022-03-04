@@ -26,7 +26,7 @@ public class ErrorController {
             ConstraintViolationException e) {
         ValidationErrorResponse error = new ValidationErrorResponse();
         for (ConstraintViolation violation : e.getConstraintViolations()) {
-            error.getViolations().add(
+            error.addViolation(
                     new Violation(violation.getPropertyPath().toString(), violation.getMessage()));
         }
         return error;
@@ -42,7 +42,7 @@ public class ErrorController {
         var fieldPath = fields.stream()
                 .map(r -> r.getFieldName())
                 .collect(Collectors.joining("."));
-        error.getViolations().add(new Violation(fieldPath, "must be well-formed"));
+        error.addViolation(new Violation(fieldPath, "must be well-formed"));
         return error;
     }
 
@@ -53,7 +53,7 @@ public class ErrorController {
             MethodArgumentNotValidException e) {
         ValidationErrorResponse error = new ValidationErrorResponse();
         for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
-            error.getViolations().add(
+            error.addViolation(
                     new Violation(fieldError.getField(), fieldError.getDefaultMessage()));
         }
         return error;
