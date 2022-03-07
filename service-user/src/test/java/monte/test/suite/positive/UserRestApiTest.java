@@ -1,7 +1,10 @@
 package monte.test.suite.positive;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import monte.test.AbstractTest;
 import monte.test.model.api.TestApiUser;
+import monte.test.model.api.audit.TestAudit;
 import monte.test.model.db.TestDbUser;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.junit.jupiter.api.Test;
@@ -19,9 +22,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static monte.test.model.api.audit.TestAudit.TestAction;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
+@WireMockTest(httpPort = 9999)
 public class UserRestApiTest extends AbstractTest {
 
     @Autowired
@@ -40,7 +46,12 @@ public class UserRestApiTest extends AbstractTest {
     @Test
     void createUserTest() throws IOException {
         var user = fromFile(TEMPLATE_API_USER_1, TestApiUser.class);
+        stubFor(post(urlEqualTo("/audit-events"))
+                // .withRequestBody() - ignore body allow any
+                .willReturn(aResponse().withStatus(200)));
+
         var response = restTemplate.postForEntity("/users", user, TestApiUser.class);
+        var responseUserId = response.getBody().getId();
 
         assertThat(response.getStatusCode()).as("Verify status code")
                 .isEqualTo(HttpStatus.OK);
@@ -49,7 +60,11 @@ public class UserRestApiTest extends AbstractTest {
                 .ignoringAllOverriddenEquals()
                 .ignoringFields("id")
                 .isEqualTo(user);
-        assertThat(response.getBody().getId()).isNotNull();
+        assertThat(responseUserId).isNotNull();
+        verify(postRequestedFor(urlEqualTo("/audit-events")).
+                withRequestBody(equalToJson(
+                        userAuditJson(responseUserId, TestAction.CREATE, "create new user")
+                )));
     }
 
     @ParameterizedTest
@@ -57,8 +72,11 @@ public class UserRestApiTest extends AbstractTest {
     void createUserTest(String fieldName, Object fieldValue) throws Exception {
         var user = fromFile(TEMPLATE_API_USER_1, TestApiUser.class);
         PropertyUtils.setNestedProperty(user, fieldName, fieldValue);
+        stubFor(post(urlEqualTo("/audit-events"))
+                .willReturn(aResponse().withStatus(200)));
 
         var response = restTemplate.postForEntity("/users", user, TestApiUser.class);
+        var responseUserId = response.getBody().getId();
 
         assertThat(response.getStatusCode()).as("Verify status code")
                 .isEqualTo(HttpStatus.OK);
@@ -67,7 +85,11 @@ public class UserRestApiTest extends AbstractTest {
                 .ignoringAllOverriddenEquals()
                 .ignoringFields("id")
                 .isEqualTo(user);
-        assertThat(response.getBody().getId()).isNotNull();
+        assertThat(responseUserId).isNotNull();
+        verify(postRequestedFor(urlEqualTo("/audit-events")).
+                withRequestBody(equalToJson(
+                        userAuditJson(responseUserId, TestAction.CREATE, "create new user")
+                )));
     }
 
     @Test
@@ -114,6 +136,8 @@ public class UserRestApiTest extends AbstractTest {
         var dbUser = mongoTemplate.save(fromFile(TEMPLATE_DB_USER_1, TestDbUser.class));
         var dbUserId = dbUser.getId();
         var apiUser = fromFile(TEMPLATE_API_USER_2, TestApiUser.class);
+        stubFor(post(urlEqualTo("/audit-events"))
+                .willReturn(aResponse().withStatus(200)));
 
         var userEntity = new HttpEntity<>(apiUser);
         var response = restTemplate.exchange("/users/" + dbUserId,
@@ -128,6 +152,10 @@ public class UserRestApiTest extends AbstractTest {
                 .isEqualTo(apiUser);
         assertThat(response.getBody().getId()).as("Verify id")
                 .isEqualTo(dbUserId);
+        verify(postRequestedFor(urlEqualTo("/audit-events")).
+                withRequestBody(equalToJson(
+                        userAuditJson(dbUserId, TestAction.UPDATE, "update user")
+                )));
     }
 
     @ParameterizedTest
@@ -137,6 +165,8 @@ public class UserRestApiTest extends AbstractTest {
         var dbUserId = dbUser.getId();
         var apiUser = fromFile(TEMPLATE_API_USER_2, TestApiUser.class);
         PropertyUtils.setNestedProperty(apiUser, fieldName, fieldValue);
+        stubFor(post(urlEqualTo("/audit-events"))
+                .willReturn(aResponse().withStatus(200)));
 
         var userEntity = new HttpEntity<>(apiUser);
         var response = restTemplate.exchange("/users/" + dbUserId,
@@ -151,6 +181,20 @@ public class UserRestApiTest extends AbstractTest {
                 .isEqualTo(apiUser);
         assertThat(response.getBody().getId()).as("Verify id")
                 .isEqualTo(dbUserId);
+        verify(postRequestedFor(urlEqualTo("/audit-events")).
+                withRequestBody(equalToJson(
+                        userAuditJson(dbUserId, TestAction.UPDATE, "update user")
+                )));
+    }
+
+    private String userAuditJson(String id, TestAudit.TestAction testAction, String comment) throws JsonProcessingException {
+        var auditRecord = TestAudit.builder()
+                .entityName("User")
+                .entityId(id)
+                .action(testAction)
+                .comment(comment)
+                .build();
+        return objectMapper.writeValueAsString(auditRecord);
     }
 
 }
