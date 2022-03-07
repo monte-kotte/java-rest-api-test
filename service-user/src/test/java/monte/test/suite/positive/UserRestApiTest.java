@@ -54,7 +54,7 @@ public class UserRestApiTest extends AbstractTest {
 
     @ParameterizedTest
     @MethodSource("testDataProvider")
-    void createUser(String fieldName, Object fieldValue) throws Exception {
+    void createUserTest(String fieldName, Object fieldValue) throws Exception {
         var user = fromFile(TEMPLATE_API_USER_1, TestApiUser.class);
         PropertyUtils.setNestedProperty(user, fieldName, fieldValue);
 
@@ -71,7 +71,7 @@ public class UserRestApiTest extends AbstractTest {
     }
 
     @Test
-    void getAllUsers() throws IOException {
+    void getAllUsersTest() throws IOException {
         // prep
         var dbUser = mongoTemplate.save(fromFile(TEMPLATE_DB_USER_1, TestDbUser.class));
         var expectedApiUser = fromFile(TEMPLATE_API_USER_1, TestApiUser.class);
@@ -93,7 +93,7 @@ public class UserRestApiTest extends AbstractTest {
     }
 
     @Test
-    void getUserById() throws IOException {
+    void getUserByIdTest() throws IOException {
         var dbUser = mongoTemplate.save(fromFile(TEMPLATE_DB_USER_1, TestDbUser.class));
         var dbUserId = dbUser.getId();
         var expectedApiUser = fromFile(TEMPLATE_API_USER_1, TestApiUser.class);
@@ -110,7 +110,7 @@ public class UserRestApiTest extends AbstractTest {
     }
 
     @Test
-    void updateUser() throws IOException {
+    void updateUserTest() throws IOException {
         var dbUser = mongoTemplate.save(fromFile(TEMPLATE_DB_USER_1, TestDbUser.class));
         var dbUserId = dbUser.getId();
         var apiUser = fromFile(TEMPLATE_API_USER_2, TestApiUser.class);
@@ -132,7 +132,7 @@ public class UserRestApiTest extends AbstractTest {
 
     @ParameterizedTest
     @MethodSource("testDataProvider")
-    void updateUser(String fieldName, Object fieldValue) throws Exception {
+    void updateUserTest(String fieldName, Object fieldValue) throws Exception {
         var dbUser = mongoTemplate.save(fromFile(TEMPLATE_DB_USER_1, TestDbUser.class));
         var dbUserId = dbUser.getId();
         var apiUser = fromFile(TEMPLATE_API_USER_2, TestApiUser.class);
