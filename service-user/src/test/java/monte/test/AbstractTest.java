@@ -5,6 +5,7 @@ import monte.service.user.UserApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 
 @ActiveProfiles("component-test")
+@AutoConfigureWireMock(port = 9999)
 @SpringBootTest(classes = UserApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class AbstractTest {
 

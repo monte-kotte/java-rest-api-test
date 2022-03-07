@@ -1,7 +1,6 @@
 package monte.test.suite.positive;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import monte.test.AbstractTest;
 import monte.test.model.api.TestApiUser;
 import monte.test.model.api.audit.TestAudit;
@@ -27,7 +26,6 @@ import static monte.test.model.api.audit.TestAudit.TestAction;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-@WireMockTest(httpPort = 9999)
 public class UserRestApiTest extends AbstractTest {
 
     @Autowired
