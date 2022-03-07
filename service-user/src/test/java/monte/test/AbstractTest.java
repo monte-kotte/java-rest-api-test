@@ -1,11 +1,14 @@
 package monte.test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monte.service.user.UserApplication;
+import monte.test.model.api.audit.TestAudit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -41,9 +44,21 @@ public abstract class AbstractTest {
     protected TestRestTemplate restTemplate;
     @Autowired
     protected ObjectMapper objectMapper;
+    @Autowired
+    protected MongoTemplate mongoTemplate;
 
     protected <T> T fromFile(String fileName, Class<T> clazz) throws IOException {
         return objectMapper.readValue(new File(fileName), clazz);
+    }
+
+    protected String userAuditJson(String id, TestAudit.TestAction testAction, String comment) throws JsonProcessingException {
+        var auditRecord = TestAudit.builder()
+                .entityName("User")
+                .entityId(id)
+                .action(testAction)
+                .comment(comment)
+                .build();
+        return objectMapper.writeValueAsString(auditRecord);
     }
 
 }
