@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static monte.test.utils.Constants.Files.TEMPLATE_API_USER_1;
+import static monte.test.utils.Constants.Files.TEMPLATE_API_USER_2;
 import static monte.test.utils.EntityFactory.createApiUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;

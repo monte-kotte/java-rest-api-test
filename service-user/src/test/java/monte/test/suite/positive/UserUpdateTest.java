@@ -14,6 +14,9 @@ import java.io.IOException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static monte.test.model.api.audit.TestAudit.TestAction;
+import static monte.test.utils.Constants.Files.TEMPLATE_API_USER_2;
+import static monte.test.utils.Constants.Files.TEMPLATE_DB_USER_1;
+import static monte.test.utils.Constants.TestData.AUDIT_UPDATE_COMMENT;
 import static monte.test.utils.EntityFactory.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,7 +26,8 @@ public class UserUpdateTest extends AbstractTest {
     void updateUserTest() throws IOException {
         var dbUser = mongoTemplate.save(createDbUser(TEMPLATE_DB_USER_1));
         var dbUserId = dbUser.getId();
-        var apiUser = createApiUser(TEMPLATE_API_USER_2, dbUser.getId());;
+        var apiUser = createApiUser(TEMPLATE_API_USER_2, dbUser.getId());
+        ;
         stubFor(post(urlEqualTo("/audit-events"))
                 .willReturn(aResponse().withStatus(200)));
 
@@ -42,7 +46,7 @@ public class UserUpdateTest extends AbstractTest {
                 .isEqualTo(dbUserId);
         verify(postRequestedFor(urlEqualTo("/audit-events")).
                 withRequestBody(equalToJson(
-                        userAuditJson(dbUserId, TestAction.UPDATE, "update user")
+                        userAuditJson(dbUserId, TestAction.UPDATE, AUDIT_UPDATE_COMMENT)
                 )));
     }
 
@@ -51,7 +55,8 @@ public class UserUpdateTest extends AbstractTest {
     void updateUserTest(String fieldName, Object fieldValue) throws Exception {
         var dbUser = mongoTemplate.save(createDbUser(TEMPLATE_DB_USER_1));
         var dbUserId = dbUser.getId();
-        var apiUser = createApiUser(TEMPLATE_API_USER_2, dbUser.getId());;
+        var apiUser = createApiUser(TEMPLATE_API_USER_2, dbUser.getId());
+        ;
         PropertyUtils.setNestedProperty(apiUser, fieldName, fieldValue);
         stubFor(post(urlEqualTo("/audit-events"))
                 .willReturn(aResponse().withStatus(200)));
@@ -71,7 +76,7 @@ public class UserUpdateTest extends AbstractTest {
                 .isEqualTo(dbUserId);
         verify(postRequestedFor(urlEqualTo("/audit-events")).
                 withRequestBody(equalToJson(
-                        userAuditJson(dbUserId, TestAction.UPDATE, "update user")
+                        userAuditJson(dbUserId, TestAction.UPDATE, AUDIT_UPDATE_COMMENT)
                 )));
     }
 

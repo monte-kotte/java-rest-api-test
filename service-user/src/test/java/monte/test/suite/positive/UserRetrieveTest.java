@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static monte.test.utils.Constants.Files.TEMPLATE_API_USER_1;
+import static monte.test.utils.Constants.Files.TEMPLATE_DB_USER_1;
+import static monte.test.utils.Constants.TestData.AUDIT_READ_COMMENT;
 import static monte.test.utils.EntityFactory.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -53,7 +56,7 @@ public class UserRetrieveTest extends AbstractTest {
                 .isEqualTo(expectedApiUser);
         verify(postRequestedFor(urlEqualTo("/audit-events")).
                 withRequestBody(equalToJson(
-                        userAuditJson(dbUserId, TestAudit.TestAction.READ, "read user")
+                        userAuditJson(dbUserId, TestAudit.TestAction.READ, AUDIT_READ_COMMENT)
                 )));
     }
 

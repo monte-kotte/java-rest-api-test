@@ -17,12 +17,6 @@ import org.testcontainers.utility.DockerImageName;
 @SpringBootTest(classes = UserApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class AbstractTest {
 
-    public static final String TEMPLATE_DB_USER_1 = "src/test/resources/json/template-db-user1.json";
-    public static final String TEMPLATE_API_USER_1 = "src/test/resources/json/template-api-user-1.json";
-    public static final String TEMPLATE_API_USER_2 = "src/test/resources/json/template-api-user-2.json";
-    public static final String TEMPLATE_API_AUDIT_1 = "src/test/resources/json/template-api-audit-1.json";
-    public static final String TEMPLATE_API_AUDIT_2 = "src/test/resources/json/template-api-audit-2.json";
-
     public static MongoDBContainer mongoDbContainer =
             new MongoDBContainer(DockerImageName.parse("mongo"));
 

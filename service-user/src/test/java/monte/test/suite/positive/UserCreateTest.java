@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import java.io.IOException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static monte.test.utils.Constants.Files.TEMPLATE_API_USER_1;
+import static monte.test.utils.Constants.TestData.AUDIT_CREATE_COMMENT;
 import static monte.test.utils.EntityFactory.createApiUser;
 import static monte.test.utils.EntityFactory.userAuditJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,7 +40,7 @@ public class UserCreateTest extends AbstractTest {
         assertThat(responseUserId).isNotNull();
         verify(postRequestedFor(urlEqualTo("/audit-events")).
                 withRequestBody(equalToJson(
-                        userAuditJson(responseUserId, TestAudit.TestAction.CREATE, "create new user")
+                        userAuditJson(responseUserId, TestAudit.TestAction.CREATE, AUDIT_CREATE_COMMENT)
                 )));
     }
 
@@ -63,7 +65,7 @@ public class UserCreateTest extends AbstractTest {
         assertThat(responseUserId).isNotNull();
         verify(postRequestedFor(urlEqualTo("/audit-events")).
                 withRequestBody(equalToJson(
-                        userAuditJson(responseUserId, TestAudit.TestAction.CREATE, "create new user")
+                        userAuditJson(responseUserId, TestAudit.TestAction.CREATE, AUDIT_CREATE_COMMENT)
                 )));
     }
 

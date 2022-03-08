@@ -10,12 +10,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static monte.test.utils.Constants.Files.*;
+import static monte.test.utils.Constants.TestData.ID_TO_REPLACE;
 import static monte.test.utils.EntityFactory.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserWithAuditRetrieveTest extends AbstractTest {
-
-    public static final String ID_TO_REPLACE = "REPLACE_ME_WITH_REAL_ID";
 
     @Test
     void getUserWithAuditByIdTest() throws IOException {
@@ -48,7 +48,6 @@ public class UserWithAuditRetrieveTest extends AbstractTest {
                 .ignoringAllOverriddenEquals()
                 .isEqualTo(expectedUserWithAudit);
     }
-
 
     @Test
     void getUserWithAuditById_ManyRecordsTest() throws IOException {
