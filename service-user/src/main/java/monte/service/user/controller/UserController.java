@@ -4,6 +4,7 @@ package monte.service.user.controller;
 import lombok.RequiredArgsConstructor;
 import monte.api.model.audit.Audit;
 import monte.api.model.user.User;
+import monte.api.model.user.UserWithAudit;
 import monte.service.user.client.AuditClient;
 import monte.service.user.mapper.UserMapper;
 import monte.service.user.repository.UserRepository;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -36,6 +38,22 @@ public class UserController {
                 .orElseThrow(() -> new RuntimeException("Not Found"));
         createAuditRecord(user, Audit.Action.READ, "read user");
         return user;
+    }
+
+    @GetMapping("/users-with-audit/{id}")
+    public UserWithAudit getUserWithAudit(@PathVariable(name = "id") String id) {
+        var user = repository.findById(id)
+                .map(mapper::mapToApi)
+                .orElseThrow(() -> new RuntimeException("Not Found"));
+        // Intentionally use getAll and stream filter to complicate test
+        var auditRecords = auditClient.getAll().stream()
+                .filter(record -> Objects.equals(user.getId(), record.getEntityId()))
+                .collect(Collectors.toList());
+        var userWithAudit = UserWithAudit.builder()
+                .user(user)
+                .auditEvents(auditRecords)
+                .build();
+        return userWithAudit;
     }
 
     @PostMapping("/users")
