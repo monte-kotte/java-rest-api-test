@@ -12,13 +12,15 @@ import org.springframework.http.HttpStatus;
 import java.io.IOException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static monte.test.utils.EntityFactory.createApiUser;
+import static monte.test.utils.EntityFactory.userAuditJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserCreateTest extends AbstractTest {
 
     @Test
     void createUserTest() throws IOException {
-        var user = fromFile(TEMPLATE_API_USER_1, TestApiUser.class);
+        var user = createApiUser(TEMPLATE_API_USER_1);
         stubFor(post(urlEqualTo("/audit-events"))
                 // .withRequestBody() - ignore body allow any
                 .willReturn(aResponse().withStatus(200)));
@@ -41,9 +43,9 @@ public class UserCreateTest extends AbstractTest {
     }
 
     @ParameterizedTest
-    @MethodSource("monte.test.data.UserDataProvider#testData")
+    @MethodSource("monte.test.utils.TestDataFactory#testData")
     void createUserTest(String fieldName, Object fieldValue) throws Exception {
-        var user = fromFile(TEMPLATE_API_USER_1, TestApiUser.class);
+        var user = createApiUser(TEMPLATE_API_USER_1);
         PropertyUtils.setNestedProperty(user, fieldName, fieldValue);
         stubFor(post(urlEqualTo("/audit-events"))
                 .willReturn(aResponse().withStatus(200)));

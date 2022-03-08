@@ -2,7 +2,6 @@ package monte.test.suite.positive;
 
 import monte.test.AbstractTest;
 import monte.test.model.api.TestApiUser;
-import monte.test.model.db.TestDbUser;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,15 +14,16 @@ import java.io.IOException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static monte.test.model.api.audit.TestAudit.TestAction;
+import static monte.test.utils.EntityFactory.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserUpdateTest extends AbstractTest {
 
     @Test
     void updateUserTest() throws IOException {
-        var dbUser = mongoTemplate.save(fromFile(TEMPLATE_DB_USER_1, TestDbUser.class));
+        var dbUser = mongoTemplate.save(createDbUser(TEMPLATE_DB_USER_1));
         var dbUserId = dbUser.getId();
-        var apiUser = fromFile(TEMPLATE_API_USER_2, TestApiUser.class);
+        var apiUser = createApiUser(TEMPLATE_API_USER_2, dbUser.getId());;
         stubFor(post(urlEqualTo("/audit-events"))
                 .willReturn(aResponse().withStatus(200)));
 
@@ -47,11 +47,11 @@ public class UserUpdateTest extends AbstractTest {
     }
 
     @ParameterizedTest
-    @MethodSource("monte.test.data.UserDataProvider#testData")
+    @MethodSource("monte.test.utils.TestDataFactory#testData")
     void updateUserTest(String fieldName, Object fieldValue) throws Exception {
-        var dbUser = mongoTemplate.save(fromFile(TEMPLATE_DB_USER_1, TestDbUser.class));
+        var dbUser = mongoTemplate.save(createDbUser(TEMPLATE_DB_USER_1));
         var dbUserId = dbUser.getId();
-        var apiUser = fromFile(TEMPLATE_API_USER_2, TestApiUser.class);
+        var apiUser = createApiUser(TEMPLATE_API_USER_2, dbUser.getId());;
         PropertyUtils.setNestedProperty(apiUser, fieldName, fieldValue);
         stubFor(post(urlEqualTo("/audit-events"))
                 .willReturn(aResponse().withStatus(200)));

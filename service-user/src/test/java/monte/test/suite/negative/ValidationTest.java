@@ -2,7 +2,6 @@ package monte.test.suite.negative;
 
 import monte.api.model.error.Violation;
 import monte.test.AbstractTest;
-import monte.test.model.api.TestApiUser;
 import monte.test.model.api.error.TestValidationErrorResponse;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static monte.test.utils.EntityFactory.createApiUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
@@ -83,7 +83,7 @@ public class ValidationTest extends AbstractTest {
     @ParameterizedTest
     @MethodSource("testDataProvider")
     void createUser_FieldValidationTest(String fieldName, Object fieldValue, String violationMessage) throws Exception {
-        var user = fromFile(TEMPLATE_API_USER_1, TestApiUser.class);
+        var user = createApiUser(TEMPLATE_API_USER_1);
         PropertyUtils.setNestedProperty(user, fieldName, fieldValue);
         var expectedViolation = Violation.builder()
                 .fieldName(fieldName)
@@ -101,7 +101,7 @@ public class ValidationTest extends AbstractTest {
     @ParameterizedTest
     @MethodSource("testDataProvider")
     void updateUser_FieldValidationTest(String fieldName, Object fieldValue, String violationMessage) throws Exception {
-        var user = fromFile(TEMPLATE_API_USER_2, TestApiUser.class);
+        var user = createApiUser(TEMPLATE_API_USER_2);
         PropertyUtils.setNestedProperty(user, fieldName, fieldValue);
         var expectedViolation = Violation.builder()
                 .fieldName(fieldName)

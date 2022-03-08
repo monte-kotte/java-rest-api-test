@@ -3,7 +3,6 @@ package monte.test.suite.positive;
 import monte.test.AbstractTest;
 import monte.test.model.api.TestApiUser;
 import monte.test.model.api.audit.TestAudit;
-import monte.test.model.db.TestDbUser;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -13,15 +12,15 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static monte.test.utils.EntityFactory.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserRetrieveTest extends AbstractTest {
 
     @Test
     void getAllUsersTest() throws IOException {
-        var dbUser = mongoTemplate.save(fromFile(TEMPLATE_DB_USER_1, TestDbUser.class));
-        var expectedApiUser = fromFile(TEMPLATE_API_USER_1, TestApiUser.class);
-        expectedApiUser.setId(dbUser.getId());
+        var dbUser = mongoTemplate.save(createDbUser(TEMPLATE_DB_USER_1));
+        var expectedApiUser = createApiUser(TEMPLATE_API_USER_1, dbUser.getId());
         var expectedDbSize = mongoTemplate.getCollection("user").countDocuments();
 
         var response = restTemplate.exchange("/users", HttpMethod.GET, null,
@@ -38,10 +37,9 @@ public class UserRetrieveTest extends AbstractTest {
 
     @Test
     void getUserByIdTest() throws IOException {
-        var dbUser = mongoTemplate.save(fromFile(TEMPLATE_DB_USER_1, TestDbUser.class));
+        var dbUser = mongoTemplate.save(createDbUser(TEMPLATE_DB_USER_1));
         var dbUserId = dbUser.getId();
-        var expectedApiUser = fromFile(TEMPLATE_API_USER_1, TestApiUser.class);
-        expectedApiUser.setId(dbUserId);
+        var expectedApiUser = createApiUser(TEMPLATE_API_USER_1, dbUser.getId());
         stubFor(post(urlEqualTo("/audit-events"))
                 .willReturn(aResponse().withStatus(200)));
 

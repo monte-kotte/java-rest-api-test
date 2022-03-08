@@ -1,4 +1,4 @@
-package monte.test.data;
+package monte.test.utils;
 
 import org.junit.jupiter.params.provider.Arguments;
 
@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-public class UserDataProvider {
+public class TestDataFactory {
 
     public static Stream<Arguments> testData() {
         return Stream.of(
@@ -17,6 +17,5 @@ public class UserDataProvider {
                 arguments("addresses[0].apartmentNumber", "   ")
         );
     }
-
 
 }

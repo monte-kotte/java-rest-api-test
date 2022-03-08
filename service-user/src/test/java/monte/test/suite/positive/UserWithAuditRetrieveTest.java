@@ -1,19 +1,16 @@
 package monte.test.suite.positive;
 
 import monte.test.AbstractTest;
-import monte.test.model.api.TestApiUser;
 import monte.test.model.api.TestApiUserWithAudit;
-import monte.test.model.api.audit.TestAudit;
-import monte.test.model.db.TestDbUser;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static monte.test.utils.EntityFactory.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserWithAuditRetrieveTest extends AbstractTest {
@@ -22,12 +19,11 @@ public class UserWithAuditRetrieveTest extends AbstractTest {
 
     @Test
     void getUserWithAuditByIdTest() throws IOException {
-        var dbUser = mongoTemplate.save(fromFile(TEMPLATE_DB_USER_1, TestDbUser.class));
+        var dbUser = mongoTemplate.save(createDbUser(TEMPLATE_DB_USER_1));
         var dbUserId = dbUser.getId();
-        var expectedApiUser = fromFile(TEMPLATE_API_USER_1, TestApiUser.class);
-        expectedApiUser.setId(dbUserId);
+        var expectedApiUser = createApiUser(TEMPLATE_API_USER_1, dbUser.getId());
 
-        var auditEvents = Arrays.asList(fromFile(TEMPLATE_API_AUDIT_1, TestAudit[].class));
+        var auditEvents = createAuditList(TEMPLATE_API_AUDIT_1);
         auditEvents.stream()
                 .filter(a -> ID_TO_REPLACE.equals(a.getEntityId()))
                 .forEach(t -> t.setEntityId(dbUserId));
@@ -35,7 +31,7 @@ public class UserWithAuditRetrieveTest extends AbstractTest {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-type", "application/json")
-                        .withBody(objectMapper.writeValueAsString(auditEvents))
+                        .withBody(toJson(auditEvents))
                 ));
 
         var expectedUserWithAudit = TestApiUserWithAudit.builder()
@@ -53,14 +49,14 @@ public class UserWithAuditRetrieveTest extends AbstractTest {
                 .isEqualTo(expectedUserWithAudit);
     }
 
+
     @Test
     void getUserWithAuditById_ManyRecordsTest() throws IOException {
-        var dbUser = mongoTemplate.save(fromFile(TEMPLATE_DB_USER_1, TestDbUser.class));
+        var dbUser = mongoTemplate.save(createDbUser(TEMPLATE_DB_USER_1));
         var dbUserId = dbUser.getId();
-        var expectedApiUser = fromFile(TEMPLATE_API_USER_1, TestApiUser.class);
-        expectedApiUser.setId(dbUserId);
+        var expectedApiUser = createApiUser(TEMPLATE_API_USER_1, dbUser.getId());
 
-        var auditEvents = Arrays.asList(fromFile(TEMPLATE_API_AUDIT_2, TestAudit[].class));
+        var auditEvents = createAuditList(TEMPLATE_API_AUDIT_2);
         auditEvents.stream()
                 .filter(a -> ID_TO_REPLACE.equals(a.getEntityId()))
                 .forEach(t -> t.setEntityId(dbUserId));
@@ -68,7 +64,7 @@ public class UserWithAuditRetrieveTest extends AbstractTest {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-type", "application/json")
-                        .withBody(objectMapper.writeValueAsString(auditEvents))
+                        .withBody(toJson(auditEvents))
                 ));
 
         var expectedUserWithAudit = TestApiUserWithAudit.builder()
