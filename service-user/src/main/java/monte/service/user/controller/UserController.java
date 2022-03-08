@@ -31,9 +31,11 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public User getById(@PathVariable(name = "id") String id) {
-        return repository.findById(id)
+        var user = repository.findById(id)
                 .map(mapper::mapToApi)
                 .orElseThrow(() -> new RuntimeException("Not Found"));
+        createAuditRecord(user, Audit.Action.READ, "read user");
+        return user;
     }
 
     @PostMapping("/users")
