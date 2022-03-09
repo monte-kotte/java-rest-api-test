@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,7 @@ public class UserWithAuditRetrieveTest extends AbstractTest {
     void getUserWithAuditByIdTest() throws IOException {
         var dbUser = mongoTemplate.save(createDbUser(TEMPLATE_DB_USER_1));
         var dbUserId = dbUser.getId();
-        var expectedApiUser = createApiUser(TEMPLATE_API_USER_1, dbUser.getId());
+        var apiUser = createApiUser(TEMPLATE_API_USER_1, dbUser.getId());
 
         var auditEvents = createAuditList(TEMPLATE_API_AUDIT_1);
         auditEvents.stream()
@@ -35,7 +36,7 @@ public class UserWithAuditRetrieveTest extends AbstractTest {
                 ));
 
         var expectedUserWithAudit = TestApiUserWithAudit.builder()
-                .user(expectedApiUser)
+                .user(apiUser)
                 .auditEvents(auditEvents)
                 .build();
 
@@ -53,7 +54,7 @@ public class UserWithAuditRetrieveTest extends AbstractTest {
     void getUserWithAuditById_ManyRecordsTest() throws IOException {
         var dbUser = mongoTemplate.save(createDbUser(TEMPLATE_DB_USER_1));
         var dbUserId = dbUser.getId();
-        var expectedApiUser = createApiUser(TEMPLATE_API_USER_1, dbUser.getId());
+        var apiUser = createApiUser(TEMPLATE_API_USER_1, dbUser.getId());
 
         var auditEvents = createAuditList(TEMPLATE_API_AUDIT_2);
         auditEvents.stream()
@@ -67,11 +68,43 @@ public class UserWithAuditRetrieveTest extends AbstractTest {
                 ));
 
         var expectedUserWithAudit = TestApiUserWithAudit.builder()
-                .user(expectedApiUser)
+                .user(apiUser)
                 .auditEvents(auditEvents
                         .stream()
                         .filter(a -> Objects.equals(dbUserId, a.getEntityId()))
                         .collect(Collectors.toList()))
+                .build();
+
+        var response = restTemplate.getForEntity("/users-with-audit/" + dbUserId, TestApiUserWithAudit.class);
+
+        assertThat(response.getStatusCode()).as("Verify status code")
+                .isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).as("Verify response")
+                .usingRecursiveComparison()
+                .ignoringAllOverriddenEquals()
+                .isEqualTo(expectedUserWithAudit);
+    }
+
+    @Test
+    void getUserWithAuditById_NoMatchedRecordsTest() throws IOException {
+        var dbUser = mongoTemplate.save(createDbUser(TEMPLATE_DB_USER_1));
+        var dbUserId = dbUser.getId();
+        var apiUser = createApiUser(TEMPLATE_API_USER_1, dbUser.getId());
+
+        var auditEvents = createAuditList(TEMPLATE_API_AUDIT_2);
+        auditEvents.stream()
+                .filter(a -> ID_TO_REPLACE.equals(a.getEntityId()))
+                .forEach(t -> t.setEntityId("NOT_MATCHED_ID"));
+        stubFor(get(urlEqualTo("/audit-events"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-type", "application/json")
+                        .withBody(toJson(auditEvents))
+                ));
+
+        var expectedUserWithAudit = TestApiUserWithAudit.builder()
+                .user(apiUser)
+                .auditEvents(List.of())
                 .build();
 
         var response = restTemplate.getForEntity("/users-with-audit/" + dbUserId, TestApiUserWithAudit.class);
