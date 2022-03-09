@@ -1,5 +1,8 @@
 server:
   port: 8080
+management:
+  server:
+    port: 9000
 
 # https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 spring:
