@@ -3,11 +3,13 @@ package monte.test.utils;
 public final class Constants {
 
     public final static class Files {
-        public static final String TEMPLATE_DB_USER_1 = "src/component-test/resources/json/template-db-user1.json";
-        public static final String TEMPLATE_API_USER_1 = "src/component-test/resources/json/template-api-user-1.json";
-        public static final String TEMPLATE_API_USER_2 = "src/component-test/resources/json/template-api-user-2.json";
-        public static final String TEMPLATE_API_AUDIT_1 = "src/component-test/resources/json/template-api-audit-1.json";
-        public static final String TEMPLATE_API_AUDIT_2 = "src/component-test/resources/json/template-api-audit-2.json";
+        private static final String BASE_PATH = "src/component-test/resources/json";
+
+        public static final String TEMPLATE_DB_USER_1 = BASE_PATH + "/template-db-user1.json";
+        public static final String TEMPLATE_API_USER_1 = BASE_PATH + "/template-api-user-1.json";
+        public static final String TEMPLATE_API_USER_2 = BASE_PATH + "/template-api-user-2.json";
+        public static final String TEMPLATE_API_AUDIT_1 = BASE_PATH + "/template-api-audit-1.json";
+        public static final String TEMPLATE_API_AUDIT_2 = BASE_PATH + "/template-api-audit-2.json";
     }
 
     public final static class TestData {
