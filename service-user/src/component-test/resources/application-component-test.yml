@@ -1,3 +1,7 @@
 client:
   audit:
     url: "localhost:${wiremock.server.port}/audit-events"
+
+# local.server.port     or @LocalServerPort
+# local.management.port or @LocalManagementPort
+# wiremock.server.port  or N/A
