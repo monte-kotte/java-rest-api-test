@@ -13,7 +13,7 @@ import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.utility.DockerImageName;
 
 @ActiveProfiles("component-test")
-@AutoConfigureWireMock(port = 9999)
+@AutoConfigureWireMock(port = 0)
 @SpringBootTest(classes = UserApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class AbstractTest {
 
