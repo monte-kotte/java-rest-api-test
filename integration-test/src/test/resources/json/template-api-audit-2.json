@@ -1,0 +1,30 @@
+[
+  {
+    "id": null,
+    "entityName": "User",
+    "entityId": "RANDOM_ID",
+    "action": "READ",
+    "comment": "read user"
+  },
+  {
+    "id": null,
+    "entityName": "User",
+    "entityId": "REPLACE_ME_WITH_REAL_ID",
+    "action": "CREATE",
+    "comment": "create new user"
+  },
+  {
+    "id": null,
+    "entityName": "User",
+    "entityId": null,
+    "action": "UPDATE",
+    "comment": "update user"
+  },
+  {
+    "id": null,
+    "entityName": "User",
+    "entityId": "REPLACE_ME_WITH_REAL_ID",
+    "action": "READ",
+    "comment": "read user"
+  }
+]

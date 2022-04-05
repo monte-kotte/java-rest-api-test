@@ -1,0 +1,19 @@
+{
+  "firstName": "Mark",
+  "secondName": "Smith",
+  "dateOfBirth": "1999-05-28",
+  "email": "nms@ani.com",
+  "driverLicense": {
+    "number": "1234d",
+    "active": true
+  },
+  "addresses": [
+    {
+      "streetAddress": "123 Main",
+      "apartmentNumber": "111",
+      "city": "Miami",
+      "state": "Florida",
+      "zip": "33333"
+    }
+  ]
+}

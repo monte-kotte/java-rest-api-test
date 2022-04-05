@@ -1,0 +1,9 @@
+[
+  {
+    "id": null,
+    "entityName": "User",
+    "entityId": "REPLACE_ME_WITH_REAL_ID",
+    "action": "CREATE",
+    "comment": "create new user"
+  }
+]
