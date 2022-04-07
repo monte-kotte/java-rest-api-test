@@ -14,6 +14,7 @@
     <module>service-audit</module>
     <module>service-user</module>
     <module>integration-test</module>
+    <module>test-commons</module>
   </modules>
 
   <properties>
