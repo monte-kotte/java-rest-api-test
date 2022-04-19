@@ -28,10 +28,6 @@ public class UserServiceValidationSteps {
     ResponseEntity<TestValidationErrorResponse> errorResponse;
     TestApiUser apiUser;
 
-    @DataTableType
-    public Object objectType(String cell) {
-        return STRING_VALUES.getOrDefault(cell, cell);
-    }
 
     @Given("Api user with overridden field")
     public void createApiUserWithFieldFromTable(DataTable dataTable) throws Exception {
