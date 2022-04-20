@@ -7,7 +7,7 @@ Feature: User service - create user
     Then I validate that response body contains user
 
   Scenario Outline: Create new user
-    Given Api user with valid overridden field
+    Given Api user with overridden field
       | fieldName  | <fieldName>  |
       | fieldValue | <fieldValue> |
     When I send post request
