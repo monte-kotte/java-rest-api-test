@@ -1,16 +1,15 @@
 Feature: User service validation
 
   Scenario Outline: Post user with incorrect field
-    Given Api user with invalid overridden field
+    Given Api user with overridden field
       | fieldName  | <fieldName>  |
       | fieldValue | <fieldValue> |
     When I send post request with incorrect user entity
-    Then I validate that error response code is 400
+    Then I validate that response code is 400
     Then I validate that response contains violation <fieldName> with <violationMessage>
 
     Examples:
       | fieldName                  | fieldValue       | violationMessage                          |
-
       | firstName                  | [null]           | must not be blank                         |
       | firstName                  | [empty]          | must not be blank                         |
       | firstName                  | [blank]          | must not be blank                         |
