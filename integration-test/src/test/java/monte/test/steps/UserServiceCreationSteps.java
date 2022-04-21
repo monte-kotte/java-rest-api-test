@@ -4,9 +4,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import monte.test.model.api.TestApiUser;
-import monte.test.utils.ConfigFileReader;
 import monte.test.utils.EntityFactory;
-import org.springframework.http.HttpEntity;
 
 import static monte.test.utils.Constants.Files.TEMPLATE_API_USER_1;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,9 +19,7 @@ public class UserServiceCreationSteps extends AbstractSteps {
 
     @When("I send post request")
     public void sendPostRequest() {
-        var url = ConfigFileReader.getUserServiceUrl() + "/users";
-        var userEntity = new HttpEntity<>(testContext().getApiUser());
-        var response = restTemplate.postForEntity(url, userEntity, TestApiUser.class);
+        var response = testUserApiClient.postUser(testContext().getApiUser());
         testContext().setResponse(response);
     }
 
