@@ -13,8 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserServiceCreationSteps extends AbstractSteps {
 
-    @Given("Api user")
-    public void createApiUser() throws Exception {
+    @Given("Api user without id")
+    public void createApiUserWithoutId() throws Exception {
         var apiUser = EntityFactory.createApiUser(TEMPLATE_API_USER_1);
         testContext().setApiUser(apiUser);
     }
@@ -27,7 +27,7 @@ public class UserServiceCreationSteps extends AbstractSteps {
         testContext().setResponse(response);
     }
 
-    @Then("I validate that response body contains user")
+    @Then("I validate that response body contains api user with generated id")
     public void validateResponseBody() {
         var responseUser = (TestApiUser) testContext().getResponse().getBody();
         assertThat(responseUser).as("Verify response")
