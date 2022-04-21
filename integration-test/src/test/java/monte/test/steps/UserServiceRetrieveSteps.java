@@ -46,6 +46,14 @@ public class UserServiceRetrieveSteps extends AbstractSteps {
         testContext().setResponse(response);
     }
 
+    @When("I send get user by id request")
+    public void getUserById() {
+        var userId = testContext().getDbUser().getId();
+        var url = ConfigFileReader.getUserServiceUrl() + "/users/" + userId;
+        var response = restTemplate.getForEntity(url, TestApiUser.class);
+        testContext().setResponse(response);
+    }
+
     @Then("I validate that response body contains user")
     public void validateResponseBody() {
         var responseUserList = (List<TestApiUser>) testContext().getResponse().getBody();
@@ -58,6 +66,15 @@ public class UserServiceRetrieveSteps extends AbstractSteps {
         var responseUserList = (List<TestApiUser>) testContext().getResponse().getBody();
         assertThat(responseUserList.size()).as("Verify db size")
                 .isEqualTo(testContext().getDbSize());
+    }
+
+    @Then("I validate that response body equals user")
+    public void validateResponseBodyEqualsUser() {
+        var response = (TestApiUser) testContext().getResponse().getBody();
+        assertThat(response).as("Verify response")
+                .usingRecursiveComparison()
+                .ignoringAllOverriddenEquals()
+                .isEqualTo(testContext().getApiUser());
     }
 
 }
