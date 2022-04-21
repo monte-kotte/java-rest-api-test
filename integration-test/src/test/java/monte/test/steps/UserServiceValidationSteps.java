@@ -4,8 +4,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import monte.test.model.api.error.TestValidationErrorResponse;
 import monte.test.model.api.error.TestViolation;
-import monte.test.utils.ConfigFileReader;
-import org.springframework.http.HttpEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,9 +11,7 @@ public class UserServiceValidationSteps extends AbstractSteps {
 
     @When("I send post request with incorrect user entity")
     public void sendPostRequestWithIncorrectUser() {
-        var url = ConfigFileReader.getUserServiceUrl() + "/users";
-        var userEntity = new HttpEntity<>(testContext().getApiUser());
-        var errorResponse = restTemplate.postForEntity(url, userEntity, TestValidationErrorResponse.class);
+        var errorResponse = testUserApiClient.postIncorrectUser(testContext().getApiUser());
         testContext().setResponse(errorResponse);
     }
 

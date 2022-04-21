@@ -4,9 +4,6 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import monte.test.model.api.TestApiUser;
-import monte.test.utils.ConfigFileReader;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,18 +36,14 @@ public class UserServiceRetrieveSteps extends AbstractSteps {
 
     @When("I send get all users request")
     public void getAllUsers() {
-        var url = ConfigFileReader.getUserServiceUrl() + "/users";
-        var response = restTemplate.exchange(url, HttpMethod.GET, null,
-                new ParameterizedTypeReference<List<TestApiUser>>() {
-                });
+        var response = testUserApiClient.getAllUsers();
         testContext().setResponse(response);
     }
 
     @When("I send get user by id request")
     public void getUserById() {
         var userId = testContext().getDbUser().getId();
-        var url = ConfigFileReader.getUserServiceUrl() + "/users/" + userId;
-        var response = restTemplate.getForEntity(url, TestApiUser.class);
+        var response = testUserApiClient.getUserById(userId);
         testContext().setResponse(response);
     }
 
