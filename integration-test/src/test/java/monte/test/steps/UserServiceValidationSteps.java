@@ -11,7 +11,7 @@ public class UserServiceValidationSteps extends AbstractSteps {
 
     @When("I send post request with incorrect user entity")
     public void sendPostRequestWithIncorrectUser() {
-        var errorResponse = testUserApiClient.postIncorrectUser(testContext().getApiUser());
+        var errorResponse = testUserApiClient.postUserForError(testContext().getApiUser());
         testContext().setResponse(errorResponse);
     }
 
