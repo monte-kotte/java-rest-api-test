@@ -41,4 +41,10 @@ public class TestUserApiClient {
         return restTemplate.postForEntity(USER_SERVICE_URL, userEntity, TestValidationErrorResponse.class);
     }
 
+    public ResponseEntity<TestApiUser> updateUser(String userId, TestApiUser apiUser) {
+        var url = USER_SERVICE_URL + "/" + userId;
+        var userEntity = new HttpEntity<>(apiUser);
+        return restTemplate.exchange(url, HttpMethod.PUT, userEntity, TestApiUser.class);
+    }
+
 }

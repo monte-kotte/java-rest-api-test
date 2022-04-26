@@ -4,6 +4,7 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import monte.test.model.api.TestApiUser;
 import monte.test.utils.EntityFactory;
 import org.apache.commons.beanutils.PropertyUtils;
 
@@ -31,6 +32,17 @@ public class CommonSteps extends AbstractSteps {
     public void validateResponseCode(int statusCodeValue) {
         assertThat(testContext().getResponse().getStatusCodeValue()).as("Verify status code")
                 .isEqualTo(statusCodeValue);
+    }
+
+    @Then("I validate that response body contains api user with generated id")
+    public void validateResponseBody() {
+        var responseUser = (TestApiUser) testContext().getResponse().getBody();
+        assertThat(responseUser).as("Verify response")
+                .usingRecursiveComparison()
+                .ignoringAllOverriddenEquals()
+                .ignoringFields("id")
+                .isEqualTo(testContext().getApiUser());
+        assertThat(responseUser.getId()).isNotNull();
     }
 
 }
