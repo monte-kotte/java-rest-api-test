@@ -10,8 +10,8 @@ import static monte.test.context.TestContext.CONTEXT;
 
 public abstract class AbstractSteps {
 
-    TestUserApiClient testUserApiClient = new TestUserApiClient();
-    MongoTemplate mongoTemplate = ComponentFactory.createMongoTemplate();
+    protected TestUserApiClient testUserApiClient = ComponentFactory.createTestUserApiClient();
+    protected MongoTemplate mongoTemplate = ComponentFactory.createMongoTemplate();
 
     public TestContext testContext() {
         return CONTEXT;

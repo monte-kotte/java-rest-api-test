@@ -5,6 +5,7 @@ import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import monte.test.client.TestUserApiClient;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
@@ -12,8 +13,8 @@ import java.util.Arrays;
 
 public class ComponentFactory {
 
-    public static TestRestTemplate createTestRestTemplate() {
-        return new TestRestTemplate();
+    public static TestUserApiClient createTestUserApiClient() {
+        return new TestUserApiClient(new TestRestTemplate());
     }
 
     public static MongoTemplate createMongoTemplate() {
