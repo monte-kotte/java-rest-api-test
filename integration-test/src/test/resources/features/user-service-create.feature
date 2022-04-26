@@ -1,13 +1,13 @@
 Feature: User service - create user
 
   Scenario: Create new user
-    Given Api user without id
+    Given Api user from "TEMPLATE_API_USER_1" without id
     When I send post request
     Then I validate that response code is 200
     Then I validate that response body contains api user with generated id
 
   Scenario Outline: Create new user
-    Given Api user with overridden field
+    Given Api user from "TEMPLATE_API_USER_1" with overridden field
       | fieldName  | <fieldName>  |
       | fieldValue | <fieldValue> |
     When I send post request

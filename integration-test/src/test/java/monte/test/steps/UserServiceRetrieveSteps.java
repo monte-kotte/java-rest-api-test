@@ -8,17 +8,15 @@ import monte.test.model.api.TestApiUser;
 import java.io.IOException;
 import java.util.List;
 
-import static monte.test.utils.Constants.Files.TEMPLATE_API_USER_1;
-import static monte.test.utils.Constants.Files.TEMPLATE_DB_USER_1;
 import static monte.test.utils.EntityFactory.createApiUser;
 import static monte.test.utils.EntityFactory.createDbUser;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserServiceRetrieveSteps extends AbstractSteps {
 
-    @Given("DB user")
-    public void dbUser() throws Exception {
-        var dbUser = mongoTemplate.save(createDbUser(TEMPLATE_DB_USER_1));
+    @Given("DB user from {string}")
+    public void dbUser(String templateName) throws Exception {
+        var dbUser = mongoTemplate.save(createDbUser(toFilePath(templateName)));
         testContext().setDbUser(dbUser);
     }
 
@@ -28,9 +26,9 @@ public class UserServiceRetrieveSteps extends AbstractSteps {
         testContext().setDbSize(dbSize);
     }
 
-    @Given("Api user")
-    public void apiUser() throws IOException {
-        var apiUser = createApiUser(TEMPLATE_API_USER_1, testContext().getDbUser().getId());
+    @Given("Api user from {string}")
+    public void apiUser(String templateName) throws IOException {
+        var apiUser = createApiUser(toFilePath(templateName), testContext().getDbUser().getId());
         testContext().setApiUser(apiUser);
     }
 

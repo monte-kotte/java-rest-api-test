@@ -9,7 +9,6 @@ import org.apache.commons.beanutils.PropertyUtils;
 
 import java.util.Map;
 
-import static monte.test.utils.Constants.Files.TEMPLATE_API_USER_1;
 import static monte.test.utils.CucumberValueUtil.STRING_VALUES;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,10 +19,10 @@ public class CommonSteps extends AbstractSteps {
         return STRING_VALUES.getOrDefault(cell, cell);
     }
 
-    @Given("Api user with overridden field")
-    public void createApiUserWithFieldFromTable(DataTable dataTable) throws Exception {
+    @Given("Api user from {string} with overridden field")
+    public void createApiUserWithFieldFromTable(String templateName, DataTable dataTable) throws Exception {
         Map<String, Object> rows = dataTable.asMap(String.class, Object.class);
-        var apiUser = EntityFactory.createApiUser(TEMPLATE_API_USER_1);
+        var apiUser = EntityFactory.createApiUser(toFilePath(templateName));
         PropertyUtils.setNestedProperty(apiUser, (String) rows.get("fieldName"), rows.get("fieldValue"));
         testContext().setApiUser(apiUser);
     }
