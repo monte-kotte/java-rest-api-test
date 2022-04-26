@@ -1,7 +1,7 @@
 Feature: User service validation
 
   Scenario Outline: Post user with incorrect field
-    Given Api user with overridden field
+    Given Api user from "TEMPLATE_API_USER_1" with overridden field
       | fieldName  | <fieldName>  |
       | fieldValue | <fieldValue> |
     When I send post request with incorrect user entity
