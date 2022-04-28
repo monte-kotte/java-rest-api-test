@@ -1,10 +1,12 @@
 package monte.test.context;
 
 import monte.test.model.api.TestApiUser;
+import monte.test.model.api.audit.TestAudit;
 import monte.test.model.db.TestDbUser;
 import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.lang.ThreadLocal.withInitial;
@@ -16,6 +18,7 @@ public enum TestContext {
     private static final String API_USER = "API_USER";
     private static final String DB_USER = "DB_USER";
     private static final String DB_SIZE = "DB_SIZE";
+    private static final String AUDIT = "AUDIT";
     private static final String RESPONSE = "RESPONSE";
     private final ThreadLocal<Map<String, Object>> testContexts = withInitial(HashMap::new);
 
@@ -49,6 +52,14 @@ public enum TestContext {
 
     public void setDbSize(long dbSize) {
         set(DB_SIZE, dbSize);
+    }
+
+    public List<TestAudit> getAuditEvents() {
+        return get(AUDIT);
+    }
+
+    public void setAuditEvents(List<TestAudit> auditRecords) {
+        set(AUDIT, auditRecords);
     }
 
     private <T> T get(String name) {
