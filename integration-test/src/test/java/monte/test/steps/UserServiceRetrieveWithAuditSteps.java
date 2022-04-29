@@ -14,26 +14,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserServiceRetrieveWithAuditSteps extends AbstractSteps {
 
-    @Given("Audit events from {string}")
-    public void auditEvents(String templateName) throws Exception {
+    @Given("DB audit events from {string}")
+    public void dbAuditEvents(String templateName) throws Exception {
         var dbUserId = testContext().getDbUser().getId();
         var auditEvents = createAuditList(toFilePath(templateName));
         auditEvents.stream()
                 .filter(a -> ID_TO_REPLACE.equals(a.getEntityId()))
                 .forEach(t -> t.setEntityId(dbUserId));
-        auditEvents.forEach(a -> mongoTemplate.save(a, "audit"));
+        auditEvents.forEach(a -> mongoTemplate.save(a));
         testContext().setAuditEvents(auditEvents.stream()
                 .filter(a -> dbUserId.equals(a.getEntityId()))
                 .collect(Collectors.toList()));
     }
 
-    @Given("Audit events from {string} with no records for user")
-    public void auditEventsWithNoRecordsForUser(String templateName) throws Exception {
+    @Given("DB audit events from {string} with no records for user")
+    public void dbAuditEventsWithNoRecordsForUser(String templateName) throws Exception {
         var auditEvents = createAuditList(toFilePath(templateName));
         auditEvents.stream()
                 .filter(a -> ID_TO_REPLACE.equals(a.getEntityId()))
                 .forEach(t -> t.setEntityId("NOT_MATCHED_ID"));
-        auditEvents.forEach(a -> mongoTemplate.save(a, "audit"));
+        auditEvents.forEach(a -> mongoTemplate.save(a));
         testContext().setAuditEvents(List.of());
     }
 
@@ -46,14 +46,15 @@ public class UserServiceRetrieveWithAuditSteps extends AbstractSteps {
 
     @Then("I validate that response body equals user with audit")
     public void validateResponseBody() {
+        var expectedUser = TestApiUserWithAudit.builder()
+                .user(testContext().getApiUser())
+                .auditEvents(testContext().getAuditEvents())
+                .build();
         var responseUser = (TestApiUserWithAudit) testContext().getResponse().getBody();
         assertThat(responseUser).as("Verify response")
                 .usingRecursiveComparison()
                 .ignoringAllOverriddenEquals()
-                .isEqualTo(TestApiUserWithAudit.builder()
-                        .user(testContext().getApiUser())
-                        .auditEvents(testContext().getAuditEvents())
-                        .build());
+                .isEqualTo(expectedUser);
     }
 
 }

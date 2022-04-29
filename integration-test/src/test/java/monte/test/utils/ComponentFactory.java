@@ -11,7 +11,10 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.Arrays;
 
-public class ComponentFactory {
+public final class ComponentFactory {
+
+    private ComponentFactory() {
+    }
 
     public static TestUserApiClient createTestUserApiClient() {
         return new TestUserApiClient(new TestRestTemplate());
