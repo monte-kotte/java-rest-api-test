@@ -18,11 +18,12 @@ import org.testcontainers.utility.DockerImageName;
 public abstract class AbstractTest {
 
     public static MongoDBContainer mongoDbContainer =
-            new MongoDBContainer(DockerImageName.parse("mongo"));
+            new MongoDBContainer(DockerImageName.parse("mongo:5.0.29"));
 
     static {
         // https://www.testcontainers.org/test_framework_integration/manual_lifecycle_control/
         mongoDbContainer.start();
+        System.out.println(mongoDbContainer.getReplicaSetUrl());
     }
 
     @DynamicPropertySource

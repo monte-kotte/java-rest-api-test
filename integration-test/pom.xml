@@ -12,14 +12,13 @@
   <artifactId>integration-test</artifactId>
 
   <properties>
-    <skip.integration.tests>true</skip.integration.tests>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
-    <spring-boot.version>2.6.5</spring-boot.version>
+    <spring-boot.version>2.7.15</spring-boot.version>
     <lombok.version>1.18.22</lombok.version>
     <mongodb-driver.version>3.12.10</mongodb-driver.version>
     <cucumber.version>7.2.3</cucumber.version>
-    <jackson.version>2.13.2</jackson.version>
+    <jackson.version>2.13.5</jackson.version>
     <assertj-core.version>3.22.0</assertj-core.version>
     <commons-beanutils.version>1.9.4</commons-beanutils.version>
   </properties>
