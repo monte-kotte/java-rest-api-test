@@ -24,11 +24,11 @@ The main goal is to test user-service in a real environment with real dependenci
 In order to do so, please follow next steps:
 ```bash
 # 1. Spin up mongoDB
-docker-compose -f docker-compose.yml up
-# 2. Run audit service
+docker-compose -f docker-compose.yml up -d
+# 2. Run audit service (terminal 1)
 mvn spring-boot:run -pl service-audit
-# 3. Run user service
+# 3. Run user service (terminal 2)
 mvn spring-boot:run -pl service-user  "-Dspring-boot.run.profiles=local"
-# 4. Run integration tests
+# 4. Run integration tests (terminal 3)
 mvn clean test -Pintegration-tests -Denv=local
 ```
