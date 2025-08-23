@@ -32,3 +32,7 @@ mvn spring-boot:run -pl service-user  "-Dspring-boot.run.profiles=local"
 # 4. Run integration tests (terminal 3)
 mvn clean test -Pintegration-tests -Denv=local
 ```
+
+## **Reporting**
+An HTML Cucumber report for integration tests is generated at:
+`integration-test/target/cucumber-reports/cucumber-reports.html`
