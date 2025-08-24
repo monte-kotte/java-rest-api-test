@@ -1,6 +1,6 @@
 package monte.service.user.controller;
 
-
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import monte.api.model.audit.Audit;
 import monte.api.model.user.User;
@@ -10,7 +10,6 @@ import monte.service.user.mapper.UserMapper;
 import monte.service.user.repository.UserRepository;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;

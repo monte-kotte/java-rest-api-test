@@ -1,12 +1,12 @@
 package monte.api.model.user;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.List;
 
