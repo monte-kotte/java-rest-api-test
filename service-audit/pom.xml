@@ -21,7 +21,7 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <mapstruct.version>1.6.3</mapstruct.version>
-    <commons-collections4.version>4.4</commons-collections4.version>
+    <commons-collections4.version>4.5.0</commons-collections4.version>
   </properties>
 
   <dependencies>
