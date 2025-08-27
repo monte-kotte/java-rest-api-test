@@ -16,12 +16,12 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <spring-boot.version>3.5.4</spring-boot.version>
-    <lombok.version>1.18.22</lombok.version>
-    <mongodb-driver.version>3.12.10</mongodb-driver.version>
-    <cucumber.version>7.2.3</cucumber.version>
-    <jackson.version>2.13.5</jackson.version>
-    <assertj-core.version>3.22.0</assertj-core.version>
-    <commons-beanutils.version>1.9.4</commons-beanutils.version>
+    <lombok.version>1.18.38</lombok.version>
+    <mongodb-driver.version>5.5.1</mongodb-driver.version>
+    <cucumber.version>7.27.2</cucumber.version>
+    <jackson.version>2.19.2</jackson.version>
+    <assertj-core.version>3.27.4</assertj-core.version>
+    <commons-beanutils.version>1.11.0</commons-beanutils.version>
     <skip.integration.tests>true</skip.integration.tests>
   </properties>
 

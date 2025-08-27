@@ -18,7 +18,7 @@ import org.testcontainers.utility.DockerImageName;
 public abstract class AbstractTest {
 
     public static MongoDBContainer mongoDbContainer =
-            new MongoDBContainer(DockerImageName.parse("mongo:5.0.29"));
+            new MongoDBContainer(DockerImageName.parse("mongo:6.0.24"));
 
     static {
         // https://www.testcontainers.org/test_framework_integration/manual_lifecycle_control/
