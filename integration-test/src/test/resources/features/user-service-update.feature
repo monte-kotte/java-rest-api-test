@@ -2,7 +2,7 @@ Feature: User service - update user
 
   Scenario: Update user
     Given DB user from "TEMPLATE_DB_USER_1"
-    Given Api user from "TEMPLATE_API_USER_2"
+    And Api user from "TEMPLATE_API_USER_2"
     When I send update user request
     Then I validate that response code is 200
     Then I validate that response body contains api user with generated id
@@ -10,7 +10,7 @@ Feature: User service - update user
 
   Scenario Outline: Update user
     Given DB user from "TEMPLATE_DB_USER_1"
-    Given Api user from "TEMPLATE_API_USER_2" with overridden field
+    And Api user from "TEMPLATE_API_USER_2" with overridden field
       | fieldName  | <fieldName>  |
       | fieldValue | <fieldValue> |
     When I send update user request

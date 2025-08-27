@@ -1,4 +1,4 @@
-# Java REST api testing example
+# Java REST API Testing: Component & Integration Tests
 
 ## **Description**
 REST application has the following parts:
